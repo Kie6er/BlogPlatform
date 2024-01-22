@@ -7,6 +7,7 @@ import Label from '../../ui/Label';
 import Form from '../../ui/Form';
 import { fetchSignUpUser } from '../../services/fetchData';
 import Verify from '../../ui/Verify';
+import { setWait } from '../../redux/slices/serverStatus.slice';
 
 const SignUpForm = () => {
 	const navigate = useNavigate();
@@ -30,6 +31,10 @@ const SignUpForm = () => {
 			navigate('/sign-in');
 		}
 	}, [status]);
+
+	useEffect(() => {
+		return () => dispatch(setWait());
+	}, []);
 
 	const serverErrorCheck = !!Object.keys(serverErrors).length;
 

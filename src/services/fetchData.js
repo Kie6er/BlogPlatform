@@ -30,13 +30,20 @@ const fetchData = props => async dispatch => {
 	}
 };
 
-export const fetchArticlesList = body => async dispatch => {
+export const fetchArticlesList = body => async (dispatch, getState) => {
 	const offset = body.currentPage === 1 ? 0 : body.currentPage * body.pageSize - body.pageSize;
+	const state = getState();
+	const API_KEY = `Token ${state.user.user.token}`;
 
 	dispatch(
 		fetchData({
 			action: async () => {
-				const { data } = await axios.get(`${API_BASE}/articles?offset=${offset}&limit=${body.pageSize}`);
+				const { data } = await axios.get(`${API_BASE}/articles?offset=${offset}&limit=${body.pageSize}`, {
+					headers: {
+						Authorization: API_KEY,
+					},
+				});
+
 				return data;
 			},
 			option: setArticlesList,
@@ -44,11 +51,18 @@ export const fetchArticlesList = body => async dispatch => {
 	);
 };
 
-export const fetchArticleDetail = slug => async dispatch => {
+export const fetchArticleDetail = slug => async (dispatch, getState) => {
+	const state = getState();
+	const API_KEY = `Token ${state.user.user.token}`;
+
 	dispatch(
 		fetchData({
 			action: async () => {
-				const { data } = await axios.get(`${API_BASE}/articles/${slug}`);
+				const { data } = await axios.get(`${API_BASE}/articles/${slug}`, {
+					headers: {
+						Authorization: API_KEY,
+					},
+				});
 				return data;
 			},
 			option: setArticleDetail,
@@ -197,6 +211,49 @@ export const fetchUpdateUser = body => async (dispatch, getState) => {
 				return user.data.user;
 			},
 			option: setUser,
+		})
+	);
+};
+
+export const fetchAddLike = slug => async (dispatch, getState) => {
+	const state = getState();
+	const API_KEY = `Token ${state.user.user.token}`;
+
+	dispatch(
+		fetchData({
+			action: async () => {
+				const res = await axios.post(
+					`${API_BASE}/articles/${slug}/favorite`,
+					{},
+					{
+						headers: {
+							Authorization: API_KEY,
+						},
+					}
+				);
+				return res.data;
+			},
+			option: setArticleDetail,
+		})
+	);
+};
+
+export const fetchDeleteLike = slug => async (dispatch, getState) => {
+	const state = getState();
+	const API_KEY = `Token ${state.user.user.token}`;
+
+	dispatch(
+		fetchData({
+			action: async () => {
+				const res = await axios.delete(`${API_BASE}/articles/${slug}/favorite`, {
+					headers: {
+						Authorization: API_KEY,
+					},
+				});
+
+				return res.data;
+			},
+			option: setArticleDetail,
 		})
 	);
 };

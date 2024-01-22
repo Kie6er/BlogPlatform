@@ -12,10 +12,11 @@ const ArticleDetailPage = () => {
 
 	const { article } = useSelector(state => state.article);
 	const { status, errors } = useSelector(state => state.server);
+	const { isAuth } = useSelector(state => state.user);
 
 	useEffect(() => {
 		dispatch(fetchArticleDetail(slug));
-	}, [slug]);
+	}, [slug, isAuth]);
 
 	return (
 		<Verify status={status} errors={errors}>

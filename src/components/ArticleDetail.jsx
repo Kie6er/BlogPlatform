@@ -6,14 +6,14 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setDeleteArticle, setEditArticle, setUserArticle } from '../redux/slices/article.slice';
-import { fetchArticleDelete } from '../services/fetchData';
+import { fetchAddLike, fetchArticleDelete, fetchDeleteLike } from '../services/fetchData';
 
 const ArticleDetail = props => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const { article, userArticle, slug, deleteArticle } = useSelector(state => state.article);
-	const { user } = useSelector(state => state.user);
+	const { user, isAuth } = useSelector(state => state.user);
 
 	useEffect(() => {
 		if (user.username === article.author.username) {
@@ -39,6 +39,14 @@ const ArticleDetail = props => {
 		dispatch(fetchArticleDelete(slug));
 	};
 
+	const handleLike = () => {
+		if (props.favorited) {
+			dispatch(fetchDeleteLike(slug));
+		} else {
+			dispatch(fetchAddLike(slug));
+		}
+	};
+
 	return (
 		<div className='article article--detail'>
 			<div className='article__inner'>
@@ -50,7 +58,8 @@ const ArticleDetail = props => {
 							</h3>
 							<button
 								className={`${props.favorited ? 'article__like active' : 'article__like'}`}
-								disabled
+								disabled={!isAuth}
+								onClick={handleLike}
 							>
 								<span>
 									<svg

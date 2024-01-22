@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Label from '../../ui/Label';
 import Form from '../../ui/Form';
 import { fetchSignInUser } from '../../services/fetchData';
 import Verify from '../../ui/Verify';
+import { setWait } from '../../redux/slices/serverStatus.slice';
 
 const SignInForm = () => {
 	const dispatch = useDispatch();
@@ -19,6 +21,10 @@ const SignInForm = () => {
 	const onSubmit = data => {
 		dispatch(fetchSignInUser(data));
 	};
+
+	useEffect(() => {
+		return () => dispatch(setWait());
+	}, []);
 
 	return (
 		<Verify status={status} errors={serverErrors}>

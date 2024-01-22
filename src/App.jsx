@@ -13,6 +13,7 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import NewArticle from './pages/NewArticle';
 import EditArticle from './pages/EditArticle';
+import NotFound from './pages/NotFound/NotFound';
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const App = () => {
 									<Route path='/sign-up' element={<SignUp />} />
 									<Route path='/profile' element={<Profile />} />
 									<Route path='/new-article' element={<NewArticle />} />
+									<Route path='*' element={<NotFound />} />
 								</Routes>
 							</Online>
 							<Offline>

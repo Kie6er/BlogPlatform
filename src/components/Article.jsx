@@ -1,9 +1,20 @@
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { fetchAddLike, fetchDeleteLike } from '../services/fetchData';
 
 const Article = props => {
 	const { isAuth } = useSelector(state => state.user);
+	const dispatch = useDispatch();
+
+	const handleLike = () => {
+		if (props.favorited) {
+			dispatch(fetchDeleteLike(props.slug));
+		} else {
+			dispatch(fetchAddLike(props.slug));
+		}
+	};
 
 	return (
 		<li className='article'>
@@ -16,6 +27,7 @@ const Article = props => {
 						<button
 							className={`${props.favorited ? 'article__like active' : 'article__like'}`}
 							disabled={!isAuth}
+							onClick={handleLike}
 						>
 							<span>
 								<svg

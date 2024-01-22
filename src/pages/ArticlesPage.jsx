@@ -9,11 +9,13 @@ import { fetchArticlesList } from '../services/fetchData';
 const ArticlesPage = () => {
 	const dispatch = useDispatch();
 	const { currentPage, totalArticles } = useSelector(state => state.articlesList);
+	const { article } = useSelector(state => state.article);
+	const { isAuth } = useSelector(state => state.user);
 	const [pageSize, setPageSize] = useState(5);
 
 	useEffect(() => {
 		dispatch(fetchArticlesList({ currentPage, pageSize }));
-	}, [currentPage, pageSize]);
+	}, [currentPage, pageSize, isAuth, article]);
 
 	return (
 		<>

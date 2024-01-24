@@ -207,7 +207,7 @@ export const fetchUpdateUser = body => async (dispatch, getState) => {
 					},
 				});
 
-				localStorage.setItem('user', JSON.stringify(user.data.user));
+				localStorage.setItem('user', JSON.stringify(user.data.user.token));
 				return user.data.user;
 			},
 			option: setUser,
@@ -254,6 +254,23 @@ export const fetchDeleteLike = slug => async (dispatch, getState) => {
 				return res.data;
 			},
 			option: setArticleDetail,
+		})
+	);
+};
+
+export const fetchCurrentUser = token => async dispatch => {
+	dispatch(
+		fetchData({
+			action: async () => {
+				const res = await axios.get(`${API_BASE}/user`, {
+					headers: {
+						Authorization: `Token ${token}`,
+					},
+				});
+
+				return res.data.user;
+			},
+			option: setUser,
 		})
 	);
 };

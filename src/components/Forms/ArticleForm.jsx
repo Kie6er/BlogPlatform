@@ -1,16 +1,14 @@
 import { useForm } from 'react-hook-form';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button } from 'antd';
 
 import Label from '../../ui/Label';
 import Form from '../../ui/Form';
-import { fetchArticleNew, fetchArticleUpdate } from '../../services/fetchData';
 import Verify from '../../ui/Verify';
-import { setEditArticle } from '../../redux/slices/article.slice';
 
-const ArticleForm = ({ title }) => {
+const ArticleForm = ({ title, newArticle, updateArticle }) => {
 	const {
 		register,
 		handleSubmit,
@@ -21,7 +19,6 @@ const ArticleForm = ({ title }) => {
 	const [tagList, setTagList] = useState([]);
 	const [tagValue, setTagValue] = useState('');
 	const refAddTagInput = useRef();
-	const dispatch = useDispatch();
 	const { status, errors: serverErrors } = useSelector(state => state.server);
 	const { article, slug, edit } = useSelector(state => state.article);
 	const navigate = useNavigate();
@@ -48,14 +45,7 @@ const ArticleForm = ({ title }) => {
 		if (data.tagList) {
 			data.tagList = data.tagList.filter(tag => tag !== '');
 		}
-
-		if (edit) {
-			dispatch(fetchArticleUpdate({ data, slug }));
-			dispatch(setEditArticle(false));
-		} else {
-			dispatch(fetchArticleNew(data));
-			dispatch(setEditArticle(false));
-		}
+		edit ? updateArticle(data) : newArticle(data);
 	};
 
 	const handleAddTag = tag => {

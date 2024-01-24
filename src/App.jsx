@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ArticlesPage from './pages/ArticlesPage';
 import InternetError from './ui/InternetError';
 import Header from './components/Header';
-import { setUser } from './redux/slices/user.slice';
+// import { setToken } from './redux/slices/user.slice';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import NewArticle from './pages/NewArticle';
 import EditArticle from './pages/EditArticle';
 import NotFound from './pages/NotFound/NotFound';
+import { fetchCurrentUser } from './services/fetchData';
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -23,15 +24,15 @@ const App = () => {
 		if (!localStorage.getItem('user')) {
 			localStorage.setItem('user', JSON.stringify({}));
 		} else {
-			const currentUser = JSON.parse(localStorage.getItem('user'));
-			Object.keys(currentUser).length !== 0 ? dispatch(setUser(currentUser)) : null;
+			const currentToken = JSON.parse(localStorage.getItem('user'));
+			Object.keys(currentToken).length !== 0 ? dispatch(fetchCurrentUser(currentToken)) : null;
 		}
 	}, []);
 
 	useEffect(() => {
 		const currentUser = JSON.parse(localStorage.getItem('user'));
-		if (Object.keys(currentUser).length === 0) {
-			localStorage.setItem('user', JSON.stringify(user));
+		if (Object.keys(currentUser).length === 0 && user.token) {
+			localStorage.setItem('user', JSON.stringify(user.token));
 		}
 	}, [user]);
 
